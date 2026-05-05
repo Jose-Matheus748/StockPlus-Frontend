@@ -9,7 +9,7 @@ import { AlertaComponent } from '../../components/alerts/alerta.component';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, AlertaComponent],
+  imports: [CommonModule, FormsModule, RouterModule ],
   templateUrl: './login.component.html',
 })
 export class LoginComponent implements OnInit {

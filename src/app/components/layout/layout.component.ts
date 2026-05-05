@@ -39,7 +39,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   handleLogout(): void {
     this.authService.logout();
-    this.router.navigate(['/login/CLIENTE']);
+    this.router.navigate(['/login/cliente']);
   }
 
   getNomeInicial(): string {

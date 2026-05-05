@@ -7,7 +7,6 @@
 
   <div class="max-w-6xl mx-auto px-4 py-6">
 
-    <!-- HEADER -->
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-bold">Produtos</h1>
 
@@ -18,17 +17,14 @@
       </button>
     </div>
 
-    <!-- LOADING -->
     <div *ngIf="isLoading" class="text-center py-10 text-gray-500">
       Carregando...
     </div>
 
-    <!-- ERRO -->
     <div *ngIf="erro" class="bg-red-100 text-red-600 p-3 rounded mb-4">
       {{ erro }}
     </div>
 
-    <!-- LISTA -->
     <div *ngIf="!isLoading && produtos.length > 0"
          class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
@@ -49,7 +45,6 @@
           <p><b>Fornecedor:</b> {{ produto.fornecedor }}</p>
         </div>
 
-        <!-- AÇÕES -->
         <div class="flex gap-2">
           <button (click)="abrirFormulario(produto)" class="bg-blue-500 text-white px-3 py-1 rounded">
             Editar
@@ -71,7 +66,6 @@
       </div>
     </div>
 
-    <!-- EMPTY -->
     <div *ngIf="!isLoading && produtos.length === 0"
          class="text-center py-10 text-gray-500">
       Nenhum produto encontrado
@@ -79,7 +73,6 @@
 
   </div>
 
-  <!-- MODAL -->
   <div *ngIf="showFormModal"
        class="fixed inset-0 bg-black/50 flex items-center justify-center"
        (click)="fecharFormulario()">
@@ -93,19 +86,24 @@
 
       <div class="space-y-3">
 
+        <label class="text-sm font-medium text-gray-700">Nome do produto</label>
         <input [(ngModel)]="formData.nome" placeholder="Nome"
                class="w-full border p-2 rounded">
 
+        <label class="text-sm font-medium text-gray-700">Fornecedor</label>
         <input [(ngModel)]="formData.fornecedor" placeholder="Fornecedor"
                class="w-full border p-2 rounded">
 
+        <label class="text-sm font-medium text-gray-700">Marca</label>
         <input [(ngModel)]="formData.marca" placeholder="Marca"
                class="w-full border p-2 rounded">
 
+        <label class="text-sm font-medium text-gray-700">Preço</label>
         <input type="number" [(ngModel)]="formData.precoUnitario"
                placeholder="Preço"
                class="w-full border p-2 rounded">
 
+        <label class="text-sm font-medium text-gray-700">Descrição do produto</label>
         <textarea [(ngModel)]="formData.descricao"
                   placeholder="Descrição"
                   class="w-full border p-2 rounded"></textarea>

@@ -6,181 +6,216 @@
     [visivel]="alertVisivel">
   </app-alerta>
 
-  <!-- VOLTAR -->
-  <div class="mb-6">
-    <button
-      (click)="voltarEstoques()"
-      class="text-cyan-400 hover:text-cyan-300 font-semibold transition">
-      ← Voltar para Estoques
-    </button>
-  </div>
+  <div class="max-w-6xl mx-auto px-6 py-8">
 
-  <!-- RESUMO -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    <!-- HEADER -->
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="text-2xl font-semibold text-gray-900">Produtos</h1>
+        <p class="text-sm text-gray-500 mt-1">
+          Gerencie os produtos deste estoque
+        </p>
+      </div>
 
-    <div class="bg-slate-900 p-5 rounded-xl border border-cyan-500/20 shadow">
-      <p class="text-gray-400 text-sm">Valor Total</p>
-      <p class="text-2xl font-bold text-cyan-400">
-        R$ {{ valorTotalEstoque | number:'1.2-2' }}
-      </p>
+      <button
+        (click)="abrirFormulario()"
+        class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition">
+        + Novo Produto
+      </button>
     </div>
 
-    <div class="bg-slate-900 p-5 rounded-xl border border-cyan-500/20 shadow">
-      <p class="text-gray-400 text-sm">Quantidade</p>
-      <p class="text-2xl font-bold text-white">
-        {{ quantidadeTotalItens }}
-      </p>
+    <!-- VOLTAR -->
+    <div class="mb-6">
+      <button
+        (click)="voltarEstoques()"
+        class="text-sm text-gray-500 hover:text-gray-700 transition">
+        ← Voltar para Estoques
+      </button>
     </div>
 
-    <div class="bg-slate-900 p-5 rounded-xl border border-cyan-500/20 shadow">
-      <p class="text-gray-400 text-sm">Produtos</p>
-      <p class="text-2xl font-bold text-white">
-        {{ totalProdutos }}
-      </p>
+    <!-- RESUMO -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+
+      <div class="bg-white border border-gray-200 rounded-xl p-5">
+        <p class="text-sm text-gray-500">Valor total</p>
+        <p class="text-xl font-semibold text-gray-900">
+          R$ {{ valorTotalEstoque | number:'1.2-2' }}
+        </p>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-xl p-5">
+        <p class="text-sm text-gray-500">Quantidade</p>
+        <p class="text-xl font-semibold text-gray-900">
+          {{ quantidadeTotalItens }}
+        </p>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-xl p-5">
+        <p class="text-sm text-gray-500">Produtos</p>
+        <p class="text-xl font-semibold text-gray-900">
+          {{ totalProdutos }}
+        </p>
+      </div>
+
+      <div class="bg-white border border-gray-200 rounded-xl p-5">
+        <p class="text-sm text-gray-500">Preço médio</p>
+        <p class="text-xl font-semibold text-gray-900">
+          R$ {{ precoMedioUnitario | number:'1.2-2' }}
+        </p>
+      </div>
+
     </div>
 
-    <div class="bg-slate-900 p-5 rounded-xl border border-cyan-500/20 shadow">
-      <p class="text-gray-400 text-sm">Preço Médio</p>
-      <p class="text-2xl font-bold text-pink-400">
-        R$ {{ precoMedioUnitario | number:'1.2-2' }}
-      </p>
+    <!-- LOADING -->
+    <div *ngIf="isLoading" class="text-center text-gray-500 py-10">
+      Carregando produtos...
     </div>
 
-  </div>
+    <!-- ERRO -->
+    <div *ngIf="erro && !isLoading"
+         class="bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-lg mb-6">
+      {{ erro }}
+    </div>
 
-  <!-- HEADER -->
-  <div class="flex justify-between items-center mb-6">
-    <h2 class="text-2xl font-bold text-white">Produtos</h2>
+    <!-- TABELA -->
+    <div *ngIf="!isLoading && produtos.length > 0"
+         class="bg-white border border-gray-200 rounded-xl overflow-hidden">
 
-    <button
-      (click)="abrirFormulario()"
-      class="px-5 py-2 bg-pink-500 hover:bg-pink-600 rounded-lg font-bold shadow-lg shadow-pink-500/30">
-      + Produto
-    </button>
-  </div>
+      <table class="w-full text-sm">
+        <thead class="bg-gray-50 text-gray-500 text-xs uppercase">
+          <tr>
+            <th class="p-4 text-left">Nome</th>
+            <th class="p-4 text-left">Fornecedor</th>
+            <th class="p-4 text-left">Marca</th>
+            <th class="p-4 text-left">Qtd</th>
+            <th class="p-4 text-left">Preço</th>
+            <th class="p-4 text-left">Total</th>
+            <th class="p-4 text-right">Ações</th>
+          </tr>
+        </thead>
 
-  <!-- LOADING -->
-  <div *ngIf="isLoading" class="text-center text-gray-400 py-10">
-    Carregando produtos...
-  </div>
+        <tbody class="divide-y divide-gray-100">
 
-  <!-- ERRO -->
-  <div *ngIf="erro && !isLoading" class="text-red-400 py-4">
-    {{ erro }}
-  </div>
+          <tr *ngFor="let produto of produtos"
+              class="hover:bg-gray-50 transition">
 
-  <!-- TABELA -->
-  <div *ngIf="!isLoading && produtos.length > 0" class="overflow-x-auto">
+            <td class="p-4 font-medium text-gray-900">
+              {{ produto.nome }}
+            </td>
 
-    <table class="w-full text-sm text-left text-gray-300">
-      <thead class="text-xs uppercase bg-slate-800 text-gray-400">
-        <tr>
-          <th class="p-3">Nome</th>
-          <th class="p-3">Fornecedor</th>
-          <th class="p-3">Marca</th>
-          <th class="p-3">Qtd</th>
-          <th class="p-3">Preço</th>
-          <th class="p-3">Total</th>
-          <th class="p-3">Ações</th>
-        </tr>
-      </thead>
+            <td class="p-4 text-gray-600">
+              {{ produto.fornecedor }}
+            </td>
 
-      <tbody>
-        <tr
-          *ngFor="let produto of produtos"
-          class="border-b border-slate-700 hover:bg-slate-800 transition">
+            <td class="p-4 text-gray-600">
+              {{ produto.marca }}
+            </td>
 
-          <td class="p-3">{{ produto.nome }}</td>
-          <td class="p-3">{{ produto.fornecedor }}</td>
-          <td class="p-3">{{ produto.marca }}</td>
-          <td class="p-3 text-cyan-400 font-bold">
-            {{ produto.quantidade }}
-          </td>
-          <td class="p-3">
-            R$ {{ produto.precoUnitario | number:'1.2-2' }}
-          </td>
-          <td class="p-3 text-pink-400 font-bold">
-            R$ {{ calcularValorTotal(produto) | number:'1.2-2' }}
-          </td>
+            <td class="p-4 font-medium text-gray-900">
+              {{ produto.quantidade }}
+            </td>
 
-          <td class="p-3 flex gap-2">
+            <td class="p-4 text-gray-600">
+              R$ {{ produto.precoUnitario | number:'1.2-2' }}
+            </td>
 
-            <button (click)="adicionarQuantidade(produto)"
-              class="hover:text-green-400">➕</button>
+            <td class="p-4 font-medium text-gray-900">
+              R$ {{ calcularValorTotal(produto) | number:'1.2-2' }}
+            </td>
 
-            <button (click)="removerQuantidade(produto)"
-              class="hover:text-red-400">➖</button>
+            <td class="p-4 text-right space-x-3">
 
-            <button (click)="editarProduto(produto)"
-              class="hover:text-blue-400">✏️</button>
+              <button (click)="adicionarQuantidade(produto)"
+                      class="text-green-600 hover:text-green-700">
+                +
+              </button>
 
-            <button (click)="deletarProduto(produto.id)"
-              class="hover:text-red-500">🗑️</button>
+              <button (click)="removerQuantidade(produto)"
+                      class="text-red-500 hover:text-red-600">
+                -
+              </button>
 
-          </td>
+              <button (click)="editarProduto(produto)"
+                      class="text-blue-600 hover:text-blue-700">
+                ✏
+              </button>
 
-        </tr>
-      </tbody>
-    </table>
+              <button (click)="deletarProduto(produto.id)"
+                      class="text-gray-500 hover:text-red-600">
+                🗑
+              </button>
 
-  </div>
+            </td>
 
-  <!-- EMPTY -->
-  <div *ngIf="!isLoading && produtos.length === 0"
-       class="text-center text-gray-400 py-10">
-    Nenhum produto cadastrado.
+          </tr>
+
+        </tbody>
+      </table>
+
+    </div>
+
+    <!-- EMPTY -->
+    <div *ngIf="!isLoading && produtos.length === 0"
+         class="text-center text-gray-500 py-10">
+      Nenhum produto cadastrado.
+    </div>
+
   </div>
 
   <!-- MODAL -->
   <div *ngIf="showFormModal"
-       class="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+       class="fixed inset-0 bg-gray-900/40 flex items-center justify-center z-50">
 
-    <div class="bg-slate-900 p-6 rounded-xl w-full max-w-md">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md">
 
-      <h3 class="text-xl font-bold mb-4 text-white">
-        {{ isEditMode ? 'Editar Produto' : 'Novo Produto' }}
-      </h3>
+      <!-- HEADER -->
+      <div class="px-6 py-4 border-b border-gray-100">
+        <h3 class="text-lg font-semibold text-gray-900">
+          {{ isEditMode ? 'Editar Produto' : 'Novo Produto' }}
+        </h3>
+      </div>
 
-      <div class="space-y-3">
+      <!-- BODY -->
+      <div class="p-6 space-y-4">
 
-        <input [(ngModel)]="formData.nome" name="nome"
-          placeholder="Nome"
-          class="input" />
+        <input [(ngModel)]="formData.nome"
+               placeholder="Nome"
+               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
 
-        <input [(ngModel)]="formData.fornecedor" name="fornecedor"
-          placeholder="Fornecedor"
-          class="input" />
+        <input [(ngModel)]="formData.fornecedor"
+               placeholder="Fornecedor"
+               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
 
-        <input [(ngModel)]="formData.marca" name="marca"
-          placeholder="Marca"
-          class="input" />
+        <input [(ngModel)]="formData.marca"
+               placeholder="Marca"
+               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
 
-        <input type="number" [(ngModel)]="formData.quantidade"
-          name="quantidade"
-          placeholder="Quantidade"
-          class="input" />
+        <input type="number"
+               [(ngModel)]="formData.quantidade"
+               placeholder="Quantidade"
+               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
 
-        <input type="number" [(ngModel)]="formData.precoUnitario"
-          name="preco"
-          placeholder="Preço"
-          class="input" />
+        <input type="number"
+               [(ngModel)]="formData.precoUnitario"
+               placeholder="Preço"
+               class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
 
         <textarea [(ngModel)]="formData.descricao"
-          name="descricao"
-          placeholder="Descrição"
-          class="input"></textarea>
+                  placeholder="Descrição"
+                  class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"></textarea>
 
       </div>
 
-      <div class="flex justify-end gap-3 mt-6">
+      <!-- FOOTER -->
+      <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-3">
 
         <button (click)="fecharFormulario()"
-          class="px-4 py-2 bg-gray-600 rounded">
+                class="px-4 py-2 text-sm text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50">
           Cancelar
         </button>
 
         <button (click)="salvarProduto()"
-          class="px-6 py-2 bg-pink-500 hover:bg-pink-600 rounded font-bold">
+                class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700">
           Salvar
         </button>
 

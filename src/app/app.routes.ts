@@ -8,7 +8,6 @@ import { ProdutosComponent } from './pages/produtos/produtos.component';
 import { ProtocolosComponent } from './pages/protocolos/protocolos.component';
 import { ProtocoloComponent } from './pages/protocolo/protocolo.component';
 import { WelcomeComponent } from './pages/bem_vindo/bem_vindo.component';
-
 import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
