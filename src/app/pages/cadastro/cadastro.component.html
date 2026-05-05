@@ -1,0 +1,48 @@
+<div class="min-h-screen flex items-center justify-center bg-[#050816] text-white">
+
+  <div class="w-full max-w-md bg-slate-900 border border-pink-500/20 rounded-2xl p-8 shadow-[0_0_30px_rgba(236,72,153,0.15)]">
+
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold font-orbitron">Cadastro</h1>
+      <p class="text-gray-400">Crie sua conta</p>
+    </div>
+
+    <form (ngSubmit)="handleSubmit()" class="space-y-4">
+
+      <input [(ngModel)]="nome" name="nome" placeholder="Nome"
+        class="input" />
+
+      <input [(ngModel)]="email" name="email" placeholder="Email"
+        class="input" />
+
+      <input [(ngModel)]="cpfOuCnpj" name="cpfOuCnpj" placeholder="CPF ou CNPJ"
+        class="input" />
+
+      <input [(ngModel)]="senha" name="senha" type="password" placeholder="Senha"
+        class="input" />
+
+      <input [(ngModel)]="confirmarSenha" name="confirmarSenha" type="password"
+        placeholder="Confirmar senha"
+        class="input" />
+
+      <div *ngIf="erro" class="text-red-400 text-sm">{{ erro }}</div>
+      <div *ngIf="sucesso" class="text-green-400 text-sm">{{ sucesso }}</div>
+
+      <button
+        type="submit"
+        class="w-full py-3 rounded-xl bg-pink-500 hover:bg-pink-600 font-bold shadow-lg shadow-pink-500/30"
+      >
+        Cadastrar
+      </button>
+
+    </form>
+
+    <p class="text-center text-gray-400 mt-6">
+      Já tem conta?
+      <a [routerLink]="['/login', tipo]" class="text-pink-400 hover:underline">
+        Login
+      </a>
+    </p>
+
+  </div>
+</div>

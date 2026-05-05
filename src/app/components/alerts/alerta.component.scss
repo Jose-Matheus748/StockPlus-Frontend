@@ -1,0 +1,29 @@
+.alerta {
+  padding: 12px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(-15px);
+  transition: 0.3s ease;
+  pointer-events: none;
+  margin-bottom: 10px;
+
+  &.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+  }
+
+  &.sucesso {
+    background: #2ecc71;
+  }
+
+  &.erro {
+    background: #e74c3c;
+  }
+
+  &.info {
+    background: #3498db;
+  }
+}

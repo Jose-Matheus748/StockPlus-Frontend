@@ -1,0 +1,192 @@
+<app-layout>
+
+  <app-alerta
+    [mensagem]="alertMensagem"
+    [tipo]="alertTipo"
+    [visivel]="alertVisivel">
+  </app-alerta>
+
+  <!-- VOLTAR -->
+  <div class="mb-6">
+    <button
+      (click)="voltarEstoques()"
+      class="text-cyan-400 hover:text-cyan-300 font-semibold transition">
+      ← Voltar para Estoques
+    </button>
+  </div>
+
+  <!-- RESUMO -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+
+    <div class="bg-slate-900 p-5 rounded-xl border border-cyan-500/20 shadow">
+      <p class="text-gray-400 text-sm">Valor Total</p>
+      <p class="text-2xl font-bold text-cyan-400">
+        R$ {{ valorTotalEstoque | number:'1.2-2' }}
+      </p>
+    </div>
+
+    <div class="bg-slate-900 p-5 rounded-xl border border-cyan-500/20 shadow">
+      <p class="text-gray-400 text-sm">Quantidade</p>
+      <p class="text-2xl font-bold text-white">
+        {{ quantidadeTotalItens }}
+      </p>
+    </div>
+
+    <div class="bg-slate-900 p-5 rounded-xl border border-cyan-500/20 shadow">
+      <p class="text-gray-400 text-sm">Produtos</p>
+      <p class="text-2xl font-bold text-white">
+        {{ totalProdutos }}
+      </p>
+    </div>
+
+    <div class="bg-slate-900 p-5 rounded-xl border border-cyan-500/20 shadow">
+      <p class="text-gray-400 text-sm">Preço Médio</p>
+      <p class="text-2xl font-bold text-pink-400">
+        R$ {{ precoMedioUnitario | number:'1.2-2' }}
+      </p>
+    </div>
+
+  </div>
+
+  <!-- HEADER -->
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-white">Produtos</h2>
+
+    <button
+      (click)="abrirFormulario()"
+      class="px-5 py-2 bg-pink-500 hover:bg-pink-600 rounded-lg font-bold shadow-lg shadow-pink-500/30">
+      + Produto
+    </button>
+  </div>
+
+  <!-- LOADING -->
+  <div *ngIf="isLoading" class="text-center text-gray-400 py-10">
+    Carregando produtos...
+  </div>
+
+  <!-- ERRO -->
+  <div *ngIf="erro && !isLoading" class="text-red-400 py-4">
+    {{ erro }}
+  </div>
+
+  <!-- TABELA -->
+  <div *ngIf="!isLoading && produtos.length > 0" class="overflow-x-auto">
+
+    <table class="w-full text-sm text-left text-gray-300">
+      <thead class="text-xs uppercase bg-slate-800 text-gray-400">
+        <tr>
+          <th class="p-3">Nome</th>
+          <th class="p-3">Fornecedor</th>
+          <th class="p-3">Marca</th>
+          <th class="p-3">Qtd</th>
+          <th class="p-3">Preço</th>
+          <th class="p-3">Total</th>
+          <th class="p-3">Ações</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr
+          *ngFor="let produto of produtos"
+          class="border-b border-slate-700 hover:bg-slate-800 transition">
+
+          <td class="p-3">{{ produto.nome }}</td>
+          <td class="p-3">{{ produto.fornecedor }}</td>
+          <td class="p-3">{{ produto.marca }}</td>
+          <td class="p-3 text-cyan-400 font-bold">
+            {{ produto.quantidade }}
+          </td>
+          <td class="p-3">
+            R$ {{ produto.precoUnitario | number:'1.2-2' }}
+          </td>
+          <td class="p-3 text-pink-400 font-bold">
+            R$ {{ calcularValorTotal(produto) | number:'1.2-2' }}
+          </td>
+
+          <td class="p-3 flex gap-2">
+
+            <button (click)="adicionarQuantidade(produto)"
+              class="hover:text-green-400">➕</button>
+
+            <button (click)="removerQuantidade(produto)"
+              class="hover:text-red-400">➖</button>
+
+            <button (click)="editarProduto(produto)"
+              class="hover:text-blue-400">✏️</button>
+
+            <button (click)="deletarProduto(produto.id)"
+              class="hover:text-red-500">🗑️</button>
+
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <!-- EMPTY -->
+  <div *ngIf="!isLoading && produtos.length === 0"
+       class="text-center text-gray-400 py-10">
+    Nenhum produto cadastrado.
+  </div>
+
+  <!-- MODAL -->
+  <div *ngIf="showFormModal"
+       class="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+
+    <div class="bg-slate-900 p-6 rounded-xl w-full max-w-md">
+
+      <h3 class="text-xl font-bold mb-4 text-white">
+        {{ isEditMode ? 'Editar Produto' : 'Novo Produto' }}
+      </h3>
+
+      <div class="space-y-3">
+
+        <input [(ngModel)]="formData.nome" name="nome"
+          placeholder="Nome"
+          class="input" />
+
+        <input [(ngModel)]="formData.fornecedor" name="fornecedor"
+          placeholder="Fornecedor"
+          class="input" />
+
+        <input [(ngModel)]="formData.marca" name="marca"
+          placeholder="Marca"
+          class="input" />
+
+        <input type="number" [(ngModel)]="formData.quantidade"
+          name="quantidade"
+          placeholder="Quantidade"
+          class="input" />
+
+        <input type="number" [(ngModel)]="formData.precoUnitario"
+          name="preco"
+          placeholder="Preço"
+          class="input" />
+
+        <textarea [(ngModel)]="formData.descricao"
+          name="descricao"
+          placeholder="Descrição"
+          class="input"></textarea>
+
+      </div>
+
+      <div class="flex justify-end gap-3 mt-6">
+
+        <button (click)="fecharFormulario()"
+          class="px-4 py-2 bg-gray-600 rounded">
+          Cancelar
+        </button>
+
+        <button (click)="salvarProduto()"
+          class="px-6 py-2 bg-pink-500 hover:bg-pink-600 rounded font-bold">
+          Salvar
+        </button>
+
+      </div>
+
+    </div>
+  </div>
+
+</app-layout>

@@ -1,0 +1,106 @@
+<div class="flex h-screen bg-[#050816] text-white">
+
+  <!-- SIDEBAR -->
+  <aside
+    [ngClass]="sidebarOpen ? 'w-64' : 'w-20'"
+    class="bg-slate-900 border-r border-slate-700 flex flex-col transition-all duration-300"
+  >
+
+    <!-- HEADER -->
+    <div class="flex items-center justify-between p-4 border-b border-slate-700">
+      <h2 *ngIf="sidebarOpen" class="text-lg font-bold text-cyan-400">
+        Estoque
+      </h2>
+
+      <button (click)="toggleSidebar()" class="text-cyan-400 text-xl">
+        ☰
+      </button>
+    </div>
+
+    <!-- NAV -->
+    <nav class="flex-1 p-2 space-y-2">
+
+      <a
+        routerLink="/estoques"
+        routerLinkActive="bg-slate-800"
+        class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-800 transition"
+      >
+        <span>📦</span>
+        <span *ngIf="sidebarOpen">Estoques</span>
+      </a>
+
+      <a
+        routerLink="/produtos"
+        routerLinkActive="bg-slate-800"
+        class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-800 transition"
+      >
+        <span>🏷️</span>
+        <span *ngIf="sidebarOpen">Produtos</span>
+      </a>
+
+      <a
+        routerLink="/protocolos"
+        routerLinkActive="bg-slate-800"
+        class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-800 transition"
+      >
+        <span>📊</span>
+        <span *ngIf="sidebarOpen">Protocolos</span>
+      </a>
+
+    </nav>
+
+    <!-- FOOTER -->
+    <div class="p-4 border-t border-slate-700">
+
+      <div class="flex items-center gap-3 mb-4">
+
+        <div class="w-10 h-10 flex items-center justify-center rounded-full bg-cyan-500 font-bold">
+          {{ getNomeInicial() }}
+        </div>
+
+        <div *ngIf="sidebarOpen">
+          <p class="text-sm font-semibold">{{ usuario?.nome }}</p>
+          <p class="text-xs text-slate-400">{{ usuario?.email }}</p>
+        </div>
+
+      </div>
+
+      <button
+        (click)="handleLogout()"
+        class="w-full py-2 rounded-lg bg-red-500 hover:bg-red-600 transition text-sm font-semibold"
+      >
+        Sair
+      </button>
+
+    </div>
+
+  </aside>
+
+  <!-- MAIN -->
+  <main class="flex-1 flex flex-col overflow-hidden">
+
+    <!-- TOP BAR -->
+    <header class="flex items-center justify-between bg-slate-900 border-b border-slate-700 px-6 py-4">
+
+      <div class="flex items-center gap-4">
+        <button (click)="toggleSidebar()" class="text-xl text-cyan-400">
+          ☰
+        </button>
+
+        <h1 class="text-lg font-semibold">Sistema de Estoque</h1>
+      </div>
+
+      <div class="text-sm text-slate-300">
+        Bem-vindo, {{ usuario?.nome }}!
+      </div>
+
+    </header>
+
+    <!-- CONTENT -->
+    <div class="flex-1 overflow-y-auto p-6">
+      <ng-content></ng-content>
+    </div>
+
+  </main>
+
+</div>

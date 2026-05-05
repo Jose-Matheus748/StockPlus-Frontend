@@ -1,0 +1,137 @@
+<app-layout>
+
+  <!-- ALERTA -->
+  <app-alerta
+    [mensagem]="alertMensagem"
+    [tipo]="alertTipo"
+    [visivel]="alertVisivel">
+  </app-alerta>
+
+  <div class="max-w-5xl mx-auto px-4 py-6">
+
+    <!-- HEADER -->
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-6">
+      <h1 class="text-2xl font-bold text-gray-800">
+        {{ protocolo.nome || 'Protocolo' }}
+      </h1>
+
+      <span class="text-lg font-semibold text-green-600">
+        R$ {{ protocolo.preco | number:'1.2-2' }}
+      </span>
+    </div>
+
+    <!-- LOADING -->
+    <div *ngIf="isLoading" class="text-center py-10 text-gray-500">
+      Carregando...
+    </div>
+
+    <!-- ERRO -->
+    <div *ngIf="erro && !isLoading"
+         class="bg-red-100 text-red-600 p-3 rounded mb-4 text-center">
+      {{ erro }}
+    </div>
+
+    <!-- CONTEÚDO -->
+    <div *ngIf="!isLoading && !erro">
+
+      <!-- TABELA -->
+      <div class="bg-white rounded-xl shadow overflow-hidden">
+
+        <table class="w-full text-sm">
+          <thead class="bg-gray-100 text-gray-700">
+            <tr>
+              <th class="p-3 text-left">Produto</th>
+              <th class="p-3 text-center">Qtd</th>
+              <th class="p-3 text-center">Valor</th>
+              <th class="p-3 text-center">Ações</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            <!-- LISTA -->
+            <tr *ngFor="let item of protocolo.itens"
+                class="border-t text-gray-700 hover:bg-gray-50 transition">
+
+              <td class="p-3">{{ item.produtoNome }}</td>
+
+              <td class="p-3 text-center">
+                {{ item.quantidade }}
+              </td>
+
+              <td class="p-3 text-center">
+                R$ {{ item.valorItem | number:'1.2-2' }}
+              </td>
+
+              <td class="p-3 text-center">
+                <button
+                  (click)="removerItem(item.id)"
+                  class="text-red-500 hover:bg-red-100 px-3 py-1 rounded transition">
+                  Remover
+                </button>
+              </td>
+
+            </tr>
+
+            <!-- EMPTY -->
+            <tr *ngIf="protocolo.itens.length === 0">
+              <td colspan="4" class="text-center p-6 text-gray-400">
+                Nenhum item adicionado
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+
+      </div>
+
+      <!-- TOTAL -->
+      <div class="text-right mt-4 text-xl font-bold text-gray-800">
+        Total: R$ {{ total | number:'1.2-2' }}
+      </div>
+
+      <!-- ADICIONAR ITEM -->
+      <div class="mt-6 flex flex-col md:flex-row gap-3">
+
+        <select
+          [(ngModel)]="novoItem.produtoId"
+          class="border rounded-lg px-3 py-2 flex-1 bg-white">
+
+          <option [ngValue]="null">Selecione um produto</option>
+
+          <option *ngFor="let p of produtos" [ngValue]="p.id">
+            {{ p.nome }}
+          </option>
+
+        </select>
+
+        <input
+          type="number"
+          [(ngModel)]="novoItem.quantidade"
+          min="1"
+          class="border rounded-lg px-3 py-2 w-full md:w-24">
+
+        <button
+          (click)="adicionarItem()"
+          class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-lg font-semibold transition">
+          Adicionar
+        </button>
+
+      </div>
+
+      <!-- AÇÕES -->
+      <div class="mt-8 flex justify-end">
+
+        <button
+          (click)="excluirProtocolo()"
+          class="bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded-lg font-semibold transition">
+          Excluir Protocolo
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</app-layout>

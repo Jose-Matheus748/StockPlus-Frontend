@@ -1,0 +1,55 @@
+<div class="min-h-screen flex items-center justify-center bg-[#050816] text-white px-4">
+
+  <div class="w-full max-w-md bg-slate-900 border border-cyan-500/20 rounded-2xl p-8 shadow-[0_0_30px_rgba(34,211,238,0.15)] backdrop-blur-sm">
+
+    <!-- LOGO / TÍTULO -->
+    <div class="text-center mb-10">
+      <h1 class="text-5xl font-bold text-white tracking-wide">
+        Stock<span class="text-cyan-400">Plus</span>
+      </h1>
+
+      <p class="text-gray-400 mt-3 text-sm">
+        Gerencie seu estoque com simplicidade e controle
+      </p>
+    </div>
+
+    <!-- BOTÃO CLIENTE -->
+    <button
+      (click)="loginCliente()"
+      class="w-full py-3 mb-4 rounded-xl bg-cyan-500 hover:bg-cyan-600
+             text-white font-bold text-lg transition-all duration-300
+             shadow-lg shadow-cyan-500/30 hover:scale-105 active:scale-95"
+    >
+      Fazer Login
+    </button>
+
+    <!-- DIVISOR -->
+    <div class="flex items-center gap-4 my-6">
+      <div class="flex-1 h-[1px] bg-slate-700"></div>
+      <span class="text-gray-500 text-sm">ou</span>
+      <div class="flex-1 h-[1px] bg-slate-700"></div>
+    </div>
+
+    <!-- BOTÃO LOJA -->
+    <button
+      (click)="loginLoja()"
+      class="w-full py-3 rounded-xl bg-pink-500 hover:bg-pink-600
+             text-white font-bold text-lg transition-all duration-300
+             shadow-lg shadow-pink-500/30 hover:scale-105 active:scale-95"
+    >
+      Tenho uma loja
+    </button>
+
+    <!-- RODAPÉ OPCIONAL -->
+    <p class="text-center text-gray-500 text-sm mt-8">
+      Novo por aqui?
+      <span
+        (click)="cadastroCliente()"
+        class="text-cyan-400 cursor-pointer hover:underline"
+      >
+        Criar conta
+      </span>
+    </p>
+
+  </div>
+</div>
