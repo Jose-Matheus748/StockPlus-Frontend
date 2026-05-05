@@ -1,6 +1,4 @@
-/**
- * Modelos TypeScript para as entidades da aplicação
- */
+
 
 export enum TipoUsuario {
   CLIENTE = 'CLIENTE',
@@ -11,7 +9,6 @@ export interface Usuario {
   id?: number;
   nome: string;
   email: string;
-  cpfOuCnpj: string;
   tipo: TipoUsuario;
 }
 
@@ -46,7 +43,6 @@ export interface Produto {
   estoqueIds: number[];
 }
 
-
 export interface ValorTotalEstoque {
   valorTotal: number;
   quantidadeTotal: number;
@@ -56,7 +52,7 @@ export interface Protocolo {
   id?: number;
   nome: string;
   preco: number;
-  lojaId: number; 
+  lojaId: number;
   itens: ItemProtocoloDTO[];
   valorTotal?: number;
 }
@@ -76,16 +72,33 @@ export interface ItemProtocolo {
   quantidade: number;
 }
 
-export enum StatusPedido {
-  EM_ANDAMENTO = 'EM_ANDAMENTO',
-  CONCLUIDO = 'CONCLUIDO',
-  CANCELADO = 'CANCELADO',
+export type StatusPedido = 'EM_ANDAMENTO' | 'CONCLUIDO' | 'CANCELADO';
+
+export type FiltroStatus = StatusPedido | 'TODOS';
+
+export interface ItemPedido {
+  protocoloId: number;
+  protocoloNome: string;
+  quantidade: number;
+  valorUnitario: number;
+  valorTotal: number;
 }
 
 export interface Pedido {
   id?: number;
   clienteId: number;
+  clienteNome: string;
   lojaId: number;
-  protocoloId: number;
   status: StatusPedido;
+  itens: ItemPedido[];
+  valorTotal: number;
+  criadoEm?: string;
+  atualizadoEm?: string;
+}
+
+export interface LojaPublica {
+  id: number;
+  nome: string;
+  email: string;
+  descricao?: string;
 }

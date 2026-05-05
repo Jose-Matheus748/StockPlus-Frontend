@@ -1,23 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, RouterModule, ActivatedRoute } from '@angular/router';
+import { Component } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-cadastro',
+  selector: 'app-cadastro-cliente',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './cadastro.component.html',
+  templateUrl: './cadastro_cliente.component.html',
 })
-export class CadastroComponent implements OnInit {
+export class CadastroClienteComponent {
   nome = '';
   email = '';
-  cpfOuCnpj = '';
   senha = '';
   confirmarSenha = '';
-
-  tipo: 'cliente' | 'loja' = 'cliente';
 
   erro = '';
   sucesso = '';
@@ -25,16 +22,8 @@ export class CadastroComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute
+    private router: Router
   ) {}
-
-  ngOnInit(): void {
-    const tipoParam = this.route.snapshot.paramMap.get('tipo');
-    if (tipoParam === 'loja') {
-      this.tipo = 'loja';
-    }
-  }
 
   handleSubmit(): void {
     this.erro = '';
@@ -65,32 +54,17 @@ export class CadastroComponent implements OnInit {
       return;
     }
 
-    const request$ =
-      this.tipo === 'cliente'
-        ? this.authService.registerCliente({
-            nome: this.nome,
-            email: this.email,
-            cpfOuCnpj: this.cpfOuCnpj,
-            senha: this.senha
-          })
-        : this.authService.registerLoja({
-            nome: this.nome,
-            email: this.email,
-            cpfOuCnpj: this.cpfOuCnpj,
-            senha: this.senha
-          });
-
-    request$.subscribe({
+    this.authService.registerCliente({
+      nome: this.nome,
+      email: this.email,
+      senha: this.senha,
+    }).subscribe({
       next: () => {
         this.sucesso = 'Cadastro realizado com sucesso!';
-
-        setTimeout(() => {
-          this.router.navigate([`/login/${this.tipo}`]);
-        }, 1500);
+        setTimeout(() => this.router.navigate(['/login/cliente']), 1500);
       },
       error: (error) => {
-        this.erro =
-          error.error?.message || 'Erro ao cadastrar. Tente novamente.';
+        this.erro = error.error?.message || 'Erro ao cadastrar. Tente novamente.';
         this.isLoading = false;
       },
     });

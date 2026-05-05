@@ -178,28 +178,34 @@
       <!-- BODY -->
       <div class="p-6 space-y-4">
 
+        <label class="text-sm font-medium text-gray-700">Nome do produto:</label>
         <input [(ngModel)]="formData.nome"
                placeholder="Nome"
                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
 
+        <label class="text-sm font-medium text-gray-700">Fornecedor:</label>
         <input [(ngModel)]="formData.fornecedor"
                placeholder="Fornecedor"
                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
 
+        <label class="text-sm font-medium text-gray-700">Marca:</label>
         <input [(ngModel)]="formData.marca"
                placeholder="Marca"
                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
 
+        <label class="text-sm font-medium text-gray-700">Quantidade</label>
         <input type="number"
                [(ngModel)]="formData.quantidade"
                placeholder="Quantidade"
                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
 
+        <label class="text-sm font-medium text-gray-700">Preço</label>
         <input type="number"
                [(ngModel)]="formData.precoUnitario"
                placeholder="Preço"
                class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm" />
 
+        <label class="text-sm font-medium text-gray-700">Adicione uma descrição (opcional):</label>
         <textarea [(ngModel)]="formData.descricao"
                   placeholder="Descrição"
                   class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"></textarea>

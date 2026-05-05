@@ -4,23 +4,19 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 import { API_CONFIG } from '../config/api.config';
 
-// =====================
-// MODELOS
-// =====================
-
 export interface Cliente {
   id?: number;
   nome: string;
   email: string;
-  cpfOuCnpj: string;
   senha: string;
+
 }
 
 export interface Loja {
   id?: number;
   nome: string;
   email: string;
-  cpfOuCnpj: string;
+  cnpj: string;
   senha: string;
 }
 
@@ -32,16 +28,9 @@ export interface LoginRequest {
 type UsuarioLogado = Cliente | Loja;
 type TipoUsuario = 'cliente' | 'loja';
 
-// =====================
-// CONSTANTES
-// =====================
 
 const USER_KEY = 'currentUser';
 const USER_TYPE_KEY = 'userType';
-
-// =====================
-// SERVICE
-// =====================
 
 @Injectable({
   providedIn: 'root',
@@ -55,52 +44,28 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  // =====================
-  // LOGIN
-  // =====================
 
   loginCliente(credentials: LoginRequest): Observable<Cliente> {
     return this.http
       .post<Cliente>(`${API_CONFIG.baseURL}/clientes/login`, credentials)
-      .pipe(
-        tap((cliente) => {
-          this.setSession(cliente, 'cliente');
-        })
-      );
+      .pipe(tap((cliente) => this.setSession(cliente, 'cliente')));
   }
 
   loginLoja(credentials: LoginRequest): Observable<Loja> {
     return this.http
       .post<Loja>(`${API_CONFIG.baseURL}/lojas/login`, credentials)
-      .pipe(
-        tap((loja) => {
-          this.setSession(loja, 'loja');
-        })
-      );
+      .pipe(tap((loja) => this.setSession(loja, 'loja')));
   }
 
-  // =====================
-  // REGISTER
-  // =====================
 
-  registerCliente(cliente: Cliente): Observable<Cliente> {
-    return this.http.post<Cliente>(
-      `${API_CONFIG.baseURL}/clientes`,
-      cliente
-    );
+  registerCliente(cliente: Omit<Cliente, 'id'>): Observable<Cliente> {
+    return this.http.post<Cliente>(`${API_CONFIG.baseURL}/clientes`, cliente);
   }
 
-  registerLoja(loja: Loja): Observable<Loja> {
-    return this.http.post<Loja>(
-      `${API_CONFIG.baseURL}/lojas`,
-      loja
-    );
+  registerLoja(loja: Omit<Loja, 'id'>): Observable<Loja> {
+    return this.http.post<Loja>(`${API_CONFIG.baseURL}/lojas`, loja);
   }
-
-  // =====================
-  // SESSION
-  // =====================
-
+  
   private setSession(user: UsuarioLogado, type: TipoUsuario): void {
     localStorage.setItem(USER_KEY, JSON.stringify(user));
     localStorage.setItem(USER_TYPE_KEY, type);
@@ -121,10 +86,6 @@ export class AuthService {
       return null;
     }
   }
-
-  // =====================
-  // HELPERS
-  // =====================
 
   getUserType(): TipoUsuario | null {
     const type = localStorage.getItem(USER_TYPE_KEY);

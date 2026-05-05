@@ -23,4 +23,8 @@ export class WelcomeComponent {
   cadastroCliente() {
     this.router.navigate(['/cadastro/cliente'])
   }
+
+  cadastroLoja() {
+    this.router.navigate(['/cadastro/loja'])
+  }
 }
