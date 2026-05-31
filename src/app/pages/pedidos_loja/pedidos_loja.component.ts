@@ -6,9 +6,7 @@ import { LayoutComponent } from '../../components/layout/layout.component';
 import { AlertaComponent } from '../../components/alerts/alerta.component';
 import { PedidoService } from '../../services/pedido.service';
 import { AuthService } from '../../services/auth.service';
-import { Pedido, StatusPedido } from '../../models/index';
-
-type FiltroStatus = StatusPedido | 'TODOS';
+import { PedidoExterno, StatusPedido, FiltroStatus } from '../../models/index';
 
 interface OpcaoFiltro {
   label: string;
@@ -31,8 +29,8 @@ interface OpcaoFiltro {
 })
 export class PedidosLojaComponent implements OnInit {
 
-  pedidos: Pedido[] = [];
-  pedidosFiltrados: Pedido[] = [];
+  pedidos: PedidoExterno[] = [];
+  pedidosFiltrados: PedidoExterno[] = [];
 
   isLoading = true;
   erro = '';
@@ -45,10 +43,10 @@ export class PedidosLojaComponent implements OnInit {
   alertVisivel = false;
 
   readonly filtros: OpcaoFiltro[] = [
-    { label: 'Todos',        valor: 'TODOS',       classeAtiva: 'bg-gray-800 text-white' },
-    { label: 'Em andamento', valor: 'EM_ANDAMENTO', classeAtiva: 'bg-blue-500 text-white' },
-    { label: 'Concluídos',   valor: 'CONCLUIDO',    classeAtiva: 'bg-green-500 text-white' },
-    { label: 'Cancelados',   valor: 'CANCELADO',    classeAtiva: 'bg-red-500 text-white' },
+    { label: 'Todos',        valor: 'TODOS',        classeAtiva: 'bg-gray-800 text-white' },
+    { label: 'Em andamento', valor: 'EM_ANDAMENTO',  classeAtiva: 'bg-blue-500 text-white' },
+    { label: 'Concluídos',   valor: 'CONCLUIDO',     classeAtiva: 'bg-green-500 text-white' },
+    { label: 'Cancelados',   valor: 'CANCELADO',     classeAtiva: 'bg-red-500 text-white' },
   ];
 
   constructor(
@@ -74,7 +72,7 @@ export class PedidosLojaComponent implements OnInit {
 
     this.pedidoService.listarPorLoja(usuario.id).subscribe({
       next: (data) => {
-        this.pedidos = data;
+        this.pedidos = data.sort((a, b) => (b.id ?? 0) - (a.id ?? 0));
         this.aplicarFiltro();
         this.isLoading = false;
       },
@@ -99,14 +97,14 @@ export class PedidosLojaComponent implements OnInit {
     }
   }
 
-  concluirPedido(pedido: Pedido): void {
-    if (!pedido.id) return;
+  concluirPedido(pedido: PedidoExterno): void {
+    if (!pedido.id || this.pedidoEmProcessamento) return;
 
     if (!confirm(`Confirmar conclusão do pedido de "${pedido.clienteNome}"?`)) return;
 
     this.pedidoEmProcessamento = pedido.id;
 
-    this.pedidoService.concluirPedido(pedido.id).subscribe({
+    this.pedidoService.concluir(pedido.id).subscribe({
       next: () => {
         this.pedidoEmProcessamento = null;
         this.carregarPedidos();
@@ -115,36 +113,58 @@ export class PedidosLojaComponent implements OnInit {
       error: (err) => {
         console.error(err);
         this.pedidoEmProcessamento = null;
-        this.mostrarAlerta('Erro ao concluir pedido', 'erro');
+        this.mostrarAlerta(err?.error?.message ?? 'Erro ao concluir pedido', 'erro');
       }
     });
   }
 
-  getBadgeClasse(status: StatusPedido): string {
+  cancelarPedido(pedido: PedidoExterno): void {
+    if (!pedido.id || this.pedidoEmProcessamento) return;
+
+    if (!confirm(`Cancelar o pedido de "${pedido.clienteNome}"?`)) return;
+
+    this.pedidoEmProcessamento = pedido.id;
+
+    this.pedidoService.cancelar(pedido.id).subscribe({
+      next: () => {
+        this.pedidoEmProcessamento = null;
+        this.carregarPedidos();
+        this.mostrarAlerta('Pedido cancelado.', 'info');
+      },
+      error: (err) => {
+        console.error(err);
+        this.pedidoEmProcessamento = null;
+        this.mostrarAlerta(err?.error?.message ?? 'Erro ao cancelar pedido', 'erro');
+      }
+    });
+  }
+
+  estaProcessando(pedido: PedidoExterno): boolean {
+    return this.pedidoEmProcessamento === pedido.id;
+  }
+
+  getBadgeClasse(status: StatusPedido | undefined): string {
     const classes: Record<StatusPedido, string> = {
       EM_ANDAMENTO: 'bg-blue-100 text-blue-700',
       CONCLUIDO:    'bg-green-100 text-green-700',
       CANCELADO:    'bg-red-100 text-red-700',
     };
-    return classes[status] ?? 'bg-gray-100 text-gray-600';
+    return status ? (classes[status] ?? 'bg-gray-100 text-gray-600') : 'bg-gray-100 text-gray-600';
   }
 
-  getLabelStatus(status: StatusPedido): string {
+  getLabelStatus(status: StatusPedido | undefined): string {
     const labels: Record<StatusPedido, string> = {
       EM_ANDAMENTO: '🔄 Em andamento',
       CONCLUIDO:    '✓ Concluído',
       CANCELADO:    '✕ Cancelado',
     };
-    return labels[status] ?? status;
+    return status ? (labels[status] ?? status) : '—';
   }
 
   mostrarAlerta(msg: string, tipo: 'erro' | 'sucesso' | 'info' = 'info'): void {
     this.alertMensagem = msg;
     this.alertTipo = tipo;
     this.alertVisivel = true;
-
-    setTimeout(() => {
-      this.alertVisivel = false;
-    }, 3000);
+    setTimeout(() => { this.alertVisivel = false; }, 3000);
   }
 }
