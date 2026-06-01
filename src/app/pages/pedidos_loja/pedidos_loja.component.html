@@ -12,7 +12,6 @@
     <div class="flex justify-between items-center mb-8">
       <h1 class="text-2xl font-semibold text-gray-800">Pedidos</h1>
 
-      <!-- FILTRO DE STATUS -->
       <div class="flex gap-2 flex-wrap justify-end">
         <button
           *ngFor="let f of filtros"
@@ -42,15 +41,11 @@
       <div *ngFor="let p of pedidosFiltrados"
            class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition flex flex-col">
 
-        <!-- CABEÇALHO DO CARD -->
+        <!-- CABEÇALHO -->
         <div class="flex justify-between items-start mb-4">
           <div>
-            <h3 class="font-semibold text-lg text-gray-800">
-              {{ p.clienteNome }}
-            </h3>
-            <p class="text-xs text-gray-400 mt-0.5">
-              Pedido #{{ p.id }}
-            </p>
+            <h3 class="font-semibold text-lg text-gray-800">{{ p.clienteNome }}</h3>
+            <p class="text-xs text-gray-400 mt-0.5">Pedido #{{ p.id }}</p>
           </div>
           <span [class]="getBadgeClasse(p.status)"
                 class="text-xs font-semibold px-2.5 py-1 rounded-full whitespace-nowrap">
@@ -58,60 +53,52 @@
           </span>
         </div>
 
-        <!-- PROTOCOLOS PEDIDOS -->
+        <!-- PROTOCOLO -->
         <div class="mb-4">
-          <p class="text-sm font-medium text-gray-600 mb-2">Protocolos:</p>
-          <ul class="space-y-1.5">
-            <li *ngFor="let item of p.itens"
-                class="flex justify-between items-center text-sm bg-amber-50 rounded-lg px-3 py-1.5">
-              <span class="text-gray-700">
-                <span class="font-medium">{{ item.quantidade }}x</span>
-                {{ item.protocoloNome }}
-              </span>
-              <span class="text-gray-500 font-medium">
-                R$ {{ item.valorTotal | number:'1.2-2' }}
-              </span>
-            </li>
-          </ul>
+          <p class="text-sm font-medium text-gray-600 mb-1">Protocolo:</p>
+          <div class="bg-amber-50 rounded-lg px-3 py-2 text-sm text-gray-700">
+            {{ p.protocoloNome ?? '—' }}
+          </div>
         </div>
 
         <!-- VALOR TOTAL -->
         <div class="border-t border-gray-100 pt-3 mb-4">
           <div class="flex justify-between items-center">
-            <span class="text-sm text-gray-600 font-medium">Total do pedido</span>
+            <span class="text-sm text-gray-600 font-medium">Total</span>
             <span class="text-base font-bold text-gray-800">
-              R$ {{ p.valorTotal | number:'1.2-2' }}
+              R$ {{ (p.valorTotal ?? 0) | number:'1.2-2' }}
             </span>
           </div>
-          <p *ngIf="p.criadoEm" class="text-xs text-gray-400 mt-1 text-right">
-            {{ p.criadoEm | date:'dd/MM/yyyy HH:mm' }}
+          <p *ngIf="p.dataCriacao" class="text-xs text-gray-400 mt-1 text-right">
+            {{ p.dataCriacao | date:'dd/MM/yyyy HH:mm' }}
           </p>
         </div>
 
         <!-- AÇÕES -->
         <div class="mt-auto flex flex-col gap-2">
 
-          <!-- BOTÃO CONCLUIR (só aparece quando não está concluído/cancelado) -->
-          <button
-            *ngIf="p.status !== 'CONCLUIDO' && p.status !== 'CANCELADO'"
-            class="w-full bg-amber-500 hover:bg-amber-700 text-white py-2 rounded-lg text-sm font-medium transition"
-            [disabled]="pedidoEmProcessamento === p.id"
-            (click)="concluirPedido(p)">
-            <span *ngIf="pedidoEmProcessamento !== p.id">✓ Concluir Pedido</span>
-            <span *ngIf="pedidoEmProcessamento === p.id">Processando...</span>
-          </button>
+          <ng-container *ngIf="p.status === 'EM_ANDAMENTO'">
+            <button
+              class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg text-sm font-medium transition"
+              [disabled]="estaProcessando(p)"
+              (click)="concluirPedido(p)">
+              {{ estaProcessando(p) ? 'Processando...' : '✓ Concluir Pedido' }}
+            </button>
+            <button
+              class="w-full bg-white hover:bg-red-50 text-red-600 border border-red-200 py-2 rounded-lg text-sm font-medium transition"
+              [disabled]="estaProcessando(p)"
+              (click)="cancelarPedido(p)">
+              {{ estaProcessando(p) ? 'Processando...' : '✕ Cancelar Pedido' }}
+            </button>
+          </ng-container>
 
-          <!-- BADGE CONCLUÍDO -->
-          <div
-            *ngIf="p.status === 'CONCLUIDO'"
-            class="w-full text-center bg-green-50 text-green-700 py-2 rounded-lg text-sm font-medium border border-green-200">
+          <div *ngIf="p.status === 'CONCLUIDO'"
+               class="w-full text-center bg-green-50 text-green-700 py-2 rounded-lg text-sm font-medium border border-green-200">
             ✓ Pedido Concluído
           </div>
 
-          <!-- BADGE CANCELADO -->
-          <div
-            *ngIf="p.status === 'CANCELADO'"
-            class="w-full text-center bg-red-50 text-red-700 py-2 rounded-lg text-sm font-medium border border-red-200">
+          <div *ngIf="p.status === 'CANCELADO'"
+               class="w-full text-center bg-red-50 text-red-700 py-2 rounded-lg text-sm font-medium border border-red-200">
             ✕ Pedido Cancelado
           </div>
 

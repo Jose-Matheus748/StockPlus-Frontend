@@ -1,0 +1,154 @@
+<app-layout-cliente>
+
+  <div class="max-w-5xl mx-auto px-4 py-6">
+
+    <!-- HEADER -->
+    <div class="mb-7">
+      <h1 class="text-2xl font-semibold text-gray-800">Meus Pedidos</h1>
+      <p class="text-sm text-gray-500 mt-1">Acompanhe o status dos seus pedidos</p>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="flex flex-wrap gap-2 mb-7">
+      <button
+        *ngFor="let filtro of filtros"
+        (click)="selecionarFiltro(filtro.valor)"
+        [class.bg-gray-900]="filtroAtivo === filtro.valor"
+        [class.text-white]="filtroAtivo === filtro.valor"
+        [class.border-gray-900]="filtroAtivo === filtro.valor"
+        [class.bg-white]="filtroAtivo !== filtro.valor"
+        [class.text-gray-600]="filtroAtivo !== filtro.valor"
+        [class.border-gray-200]="filtroAtivo !== filtro.valor"
+        [class.hover:bg-gray-50]="filtroAtivo !== filtro.valor"
+        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border text-sm font-medium transition-all">
+        <span
+          *ngIf="filtro.valor !== 'TODOS'"
+          class="w-1.5 h-1.5 rounded-full flex-shrink-0"
+          [class.bg-white]="filtroAtivo === filtro.valor"
+          [ngClass]="getBadgeColor(filtro.valor)">
+        </span>
+        {{ filtro.label }}
+        <span
+          *ngIf="contagemPorStatus(filtro.valor) > 0"
+          class="ml-0.5 text-xs px-1.5 py-0.5 rounded-full"
+          [class.bg-white]="filtroAtivo === filtro.valor"
+          [class.text-gray-900]="filtroAtivo === filtro.valor"
+          [class.bg-gray-100]="filtroAtivo !== filtro.valor"
+          [class.text-gray-500]="filtroAtivo !== filtro.valor">
+          {{ contagemPorStatus(filtro.valor) }}
+        </span>
+      </button>
+    </div>
+
+    <!-- LOADING -->
+    <div *ngIf="isLoading" class="text-center py-16 text-gray-400">
+      <svg class="animate-spin mx-auto mb-3" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2">
+        <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+      </svg>
+      Carregando pedidos...
+    </div>
+
+    <!-- ERRO -->
+    <div *ngIf="erro && !isLoading"
+      class="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg mb-6">
+      {{ erro }}
+    </div>
+
+    <!-- LISTA DE PEDIDOS -->
+    <div *ngIf="!isLoading" class="space-y-3">
+
+      <div
+        *ngFor="let pedido of pedidosFiltrados"
+        class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
+
+        <div class="flex items-start justify-between gap-4">
+
+          <!-- INFO PRINCIPAL -->
+          <div class="flex-1 min-w-0">
+
+            <!-- STATUS BADGE -->
+            <div class="flex items-center gap-2 mb-2">
+              <span
+                class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full"
+                [ngClass]="getStatusClass(pedido.status)">
+                <span class="w-1.5 h-1.5 rounded-full" [ngClass]="getStatusDotClass(pedido.status)"></span>
+                {{ getStatusLabel(pedido.status) }}
+              </span>
+              <span class="text-xs text-gray-400">Pedido #{{ pedido.id }}</span>
+            </div>
+
+            <!-- PROTOCOLO E LOJA -->
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <div class="flex items-center gap-1.5 text-sm text-gray-700">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 flex-shrink-0">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                <span class="font-medium">Protocolo #{{ pedido.protocoloId }}</span>
+              </div>
+              <div class="flex items-center gap-1.5 text-sm text-gray-500">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                  <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                Loja #{{ pedido.lojaId }}
+              </div>
+            </div>
+
+          </div>
+
+          <!-- AÇÕES -->
+          <div class="flex-shrink-0">
+            <button
+              *ngIf="pedido.status === 'EM_ANDAMENTO'"
+              (click)="cancelarPedido(pedido)"
+              [disabled]="pedido._cancelando"
+              class="inline-flex items-center gap-1.5 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed px-3 py-1.5 rounded-lg border border-red-200 hover:border-red-300 transition-all">
+              <svg *ngIf="!pedido._cancelando" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+              <svg *ngIf="pedido._cancelando" class="animate-spin" width="12" height="12" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+              </svg>
+              {{ pedido._cancelando ? 'Cancelando...' : 'Cancelar' }}
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- EMPTY STATE -->
+      <div *ngIf="pedidosFiltrados.length === 0"
+        class="text-center py-16 text-gray-400">
+        <div class="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"/>
+            <circle cx="20" cy="21" r="1"/>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+          </svg>
+        </div>
+        <p class="text-base font-medium text-gray-500">Nenhum pedido encontrado</p>
+        <p class="text-sm text-gray-400 mt-1">
+          {{ filtroAtivo === 'TODOS' ? 'Você ainda não fez nenhum pedido.' : 'Nenhum pedido com este status.' }}
+        </p>
+        <button
+          *ngIf="filtroAtivo === 'TODOS'"
+          (click)="irParaLojas()"
+          class="mt-5 inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-5 py-2.5 rounded-lg transition-colors">
+          Ver lojas disponíveis
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</app-layout-cliente>

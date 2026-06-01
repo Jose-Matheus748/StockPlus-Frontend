@@ -11,8 +11,9 @@ import { LoginClienteComponent } from './pages/login_cliente/login_cliente.compo
 import { LoginLojaComponent } from './pages/login_loja/login_loja.component';
 import { CadastroClienteComponent } from './pages/cadastro_cliente/cadastro_cliente.component';
 import { CadastroLojaComponent } from './pages/cadastro_loja/cadastro_loja.component';
-import { LayoutClienteComponent } from './components/layout/layout-cliente/layout-cliente';
 import { LojasComponent } from './pages/lojas/lojas.component';
+import { LojaProtocolosComponent } from './pages/lojas_protocolos/lojas_protocolos.component';
+import { MeusPedidosComponent } from './pages/meus_pedidos/meus_pedidos.component';
 import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -22,8 +23,8 @@ export const routes: Routes = [
     component: WelcomeComponent,
   },
 
-  { path: 'login/cliente', component: LoginClienteComponent },
-  { path: 'login/loja',    component: LoginLojaComponent },
+  { path: 'login/cliente',    component: LoginClienteComponent },
+  { path: 'login/loja',       component: LoginLojaComponent },
   { path: 'cadastro/cliente', component: CadastroClienteComponent },
   { path: 'cadastro/loja',    component: CadastroLojaComponent },
 
@@ -31,16 +32,16 @@ export const routes: Routes = [
     path: '',
     canActivate: [AuthGuard],
     children: [
-      { path: 'estoques', component: EstoquesComponent },
-      { path: 'estoques/:id', component: EstoqueComponent },
-      { path: 'produtos', component: ProdutosComponent },
-      { path: 'protocolos', component: ProtocolosComponent },
+      { path: 'estoques',       component: EstoquesComponent },
+      { path: 'estoques/:id',   component: EstoqueComponent },
+      { path: 'produtos',       component: ProdutosComponent },
+      { path: 'protocolos',     component: ProtocolosComponent },
       { path: 'protocolos/:id', component: ProtocoloComponent },
-      { path: 'pedidos', component:PedidosLojaComponent },
-      { path: 'lojas', component: LojasComponent },
-//      { path: 'lojas/:id', component: LojaDetalheComponent },
-//      { path: 'meus-pedidos', component: MeusPedidosComponent },
-    ]
+      { path: 'pedidos-loja',   component: PedidosLojaComponent },
+      { path: 'lojas',          component: LojasComponent },
+      { path: 'lojas/:id',      component: LojaProtocolosComponent },
+      { path: 'pedidos',        component: MeusPedidosComponent },
+    ],
   },
 
   {

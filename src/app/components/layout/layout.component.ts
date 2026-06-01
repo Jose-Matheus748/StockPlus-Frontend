@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { PedidoService } from '../../services/pedido.service';
 
 @Component({
   selector: 'app-layout',
@@ -14,16 +15,31 @@ export class LayoutComponent implements OnInit {
 
   sidebarOpen = true;
   userMenuOpen = false;
+  totalPendentes = 0;
 
   usuario: { nome?: string; email?: string } | null = null;
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private pedidoService: PedidoService,
   ) {}
 
   ngOnInit(): void {
     this.usuario = this.authService.getCurrentUser();
+    this.carregarPendentes();
+  }
+
+  private carregarPendentes(): void {
+    const lojaId = this.authService.getUsuarioId();
+    if (!lojaId) return;
+
+    this.pedidoService.listarPorLoja(lojaId).subscribe({
+      next: (pedidos) => {
+        this.totalPendentes = pedidos.filter(p => p.status === 'EM_ANDAMENTO').length;
+      },
+      error: () => { /* silencioso — badge é informativo */ },
+    });
   }
 
   toggleSidebar(): void {
