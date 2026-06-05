@@ -91,14 +91,28 @@
                   <span>Cliente: <strong>{{ pedido.clienteNome }}</strong></span>
                 </div>
 
-                <div class="flex items-center gap-1.5 text-sm text-gray-600">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 flex-shrink-0">
-                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                  </svg>
+                <div class="flex flex-col gap-1 text-sm text-gray-600">
+                  <div
+                    *ngFor="let protocolo of pedido.protocolos ?? []"
+                    class="flex items-center gap-1.5">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 flex-shrink-0">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                      <polyline points="14 2 14 8 20 8"/>
+                    </svg>
                     Protocolo:
-                    <strong>{{ pedido.protocoloNome }}</strong>
+                    <strong>{{ protocolo.protocoloNome ?? ('Protocolo #' + protocolo.protocoloId) }}</strong>
+                  </div>
+                  <div
+                    *ngIf="!pedido.protocolos?.length"
+                    class="flex items-center gap-1.5 text-gray-400">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                      <polyline points="14 2 14 8 20 8"/>
+                    </svg>
+                    Nenhum protocolo vinculado
+                  </div>
                 </div>
 
               </div>
