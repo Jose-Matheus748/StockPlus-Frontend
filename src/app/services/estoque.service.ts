@@ -49,8 +49,8 @@ export class EstoqueService {
   }
 
   calcularValorTotal(id: number): Observable<ValorTotalEstoque> {
-  return this.http.get<ValorTotalEstoque>(
-    `${API_CONFIG.baseURL}/estoques/${id}/valor-total`
-  );
-}
+    return this.http.get<ValorTotalEstoque>(
+      `${API_CONFIG.baseURL}/estoques/${id}/valor-total`
+    );
+  }
 }

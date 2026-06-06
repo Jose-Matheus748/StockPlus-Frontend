@@ -84,6 +84,12 @@
     valorTotal: number;
   }
 
+  export interface ProtocoloPedido {
+    protocoloId: number;
+    protocoloNome?: string;
+    valorTotal?: number;
+  }
+
   export interface Pedido {
     id?: number;
     clienteId: number;
@@ -108,8 +114,8 @@
     clienteNome?: string;
     lojaId: number;
     lojaNome?: string;
-    protocoloId: number;
-    protocoloNome?: string;
+    protocoloIds?: number[];
+    protocolos?: ProtocoloPedido[];
     valorTotal?: number;
     status?: StatusPedido;
     dataCriacao?: string;

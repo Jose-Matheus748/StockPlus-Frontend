@@ -115,7 +115,7 @@ export class LojaProtocolosComponent implements OnInit {
 
     const protocoloIds = this.protocosSelecionados.map(p => p.id as number);
 
-    this.pedidoService.criarPedidos(clienteId, this.lojaId, protocoloIds).subscribe({
+    this.pedidoService.criarPedido(clienteId, this.lojaId, protocoloIds).subscribe({
       next: () => {
         this.isCriandoPedido = false;
         this.pedidoCriado = true;
