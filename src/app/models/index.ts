@@ -107,6 +107,7 @@
     nome: string;
     email: string;
     descricao?: string;
+    fotoPerfil?: string;
   }
   export interface PedidoExterno {
     id?: number;
