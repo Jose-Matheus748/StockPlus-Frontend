@@ -9,7 +9,7 @@ export interface Cliente {
   nome: string;
   email: string;
   senha: string;
-
+  fotoPerfil?: string;
 }
 
 export interface Loja {
@@ -18,6 +18,7 @@ export interface Loja {
   email: string;
   cnpj: string;
   senha: string;
+  fotoPerfil?: string;
 }
 
 export interface LoginRequest {
@@ -86,6 +87,20 @@ export class AuthService {
       return null;
     }
   }
+
+  uploadFotoLoja(id: number, fotoPerfil: string): Observable<Loja> {
+  return this.http.patch<Loja>(
+    `${API_CONFIG.baseURL}/lojas/${id}/foto`,
+    { fotoPerfil }
+  ).pipe(tap((atualizado) => this.setSession(atualizado, 'loja')));
+}
+
+uploadFotoCliente(id: number, fotoPerfil: string): Observable<Cliente> {
+  return this.http.patch<Cliente>(
+    `${API_CONFIG.baseURL}/clientes/${id}/foto`,
+    { fotoPerfil }
+  ).pipe(tap((atualizado) => this.setSession(atualizado, 'cliente')));
+}
 
   getUserType(): TipoUsuario | null {
     const type = localStorage.getItem(USER_TYPE_KEY);
