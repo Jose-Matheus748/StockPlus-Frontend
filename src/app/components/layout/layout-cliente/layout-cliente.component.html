@@ -73,10 +73,12 @@
           (click)="toggleUserMenu()"
           class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors">
 
-          <div class="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-semibold flex-shrink-0">
-            {{ getNomeInicial() }}
-          </div>
-
+          <app-foto-perfil
+            [foto]="getFoto()"
+            [tamanho]="28"
+            (fotoSelecionada)="salvarFoto($event)"
+          ></app-foto-perfil>
+          
           <div class="text-left hidden sm:block">
             <p class="text-sm font-medium text-gray-900 leading-none">{{ usuario?.nome }}</p>
             <p class="text-xs text-gray-400 mt-0.5">{{ usuario?.email }}</p>
