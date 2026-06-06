@@ -4,11 +4,12 @@ import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { PedidoService } from '../../services/pedido.service';
+import { FotoPerfilComponent } from '../foto-perfil/foto-perfil.component';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FotoPerfilComponent],
   templateUrl: './layout.component.html',
 })
 export class LayoutComponent implements OnInit {
@@ -42,6 +43,17 @@ export class LayoutComponent implements OnInit {
     });
   }
 
+  salvarFoto(foto: string): void {
+  const id = this.authService.getUsuarioId();
+  if (!id) return;
+
+  if (this.authService.isLoja()) {
+    this.authService.uploadFotoLoja(id, foto).subscribe();
+  } else {
+    this.authService.uploadFotoCliente(id, foto).subscribe();
+  }
+}
+
   toggleSidebar(): void {
     this.sidebarOpen = !this.sidebarOpen;
   }
@@ -64,4 +76,9 @@ export class LayoutComponent implements OnInit {
   onEscape(): void {
     this.userMenuOpen = false;
   }
+
+  getFoto(): string | null {
+  const user = this.authService.getCurrentUser();
+  return (user as any)?.fotoPerfil ?? null;
+}
 }
