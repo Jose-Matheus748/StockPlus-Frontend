@@ -53,26 +53,18 @@
           </span>
         </div>
 
-        <!-- PROTOCOLOS -->
+       <!-- PROTOCOLO -->
         <div class="mb-4">
           <p class="text-sm font-medium text-gray-600 mb-1">Protocolos:</p>
-          <ng-container *ngIf="p.protocolos?.length; else semProtocolos">
-            <div
-              *ngFor="let protocolo of p.protocolos ?? []"
-              class="bg-amber-50 rounded-lg px-3 py-2 text-sm text-gray-700 mb-1">
-              <div class="flex justify-between gap-3">
-                <span>{{ protocolo.protocoloNome ?? ('Protocolo #' + protocolo.protocoloId) }}</span>
-                <span class="font-semibold whitespace-nowrap">
-                  R$ {{ (protocolo.valorTotal ?? 0) | number:'1.2-2' }}
-                </span>
+          <div class="bg-amber-50 rounded-lg px-3 py-2 text-sm text-gray-700 flex flex-col gap-1">
+            <ng-container *ngIf="p.protocolos.length; else semProtocolo">
+              <div *ngFor="let proto of p.protocolos" class="flex justify-between">
+                <span>{{ proto.protocoloNome }}</span>
+                <span class="text-gray-500">R$ {{ proto.valorTotal | number:'1.2-2' }}</span>
               </div>
-            </div>
-          </ng-container>
-          <ng-template #semProtocolos>
-            <div class="bg-gray-50 rounded-lg px-3 py-2 text-sm text-gray-400">
-              Nenhum protocolo vinculado
-            </div>
-          </ng-template>
+            </ng-container>
+            <ng-template #semProtocolo>—</ng-template>
+          </div>
         </div>
 
         <!-- VALOR TOTAL -->

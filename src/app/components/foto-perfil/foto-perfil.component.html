@@ -1,0 +1,26 @@
+<div class="relative inline-block cursor-pointer group"
+     [style.width.px]="tamanho"
+     [style.height.px]="tamanho">
+
+  <img
+    *ngIf="foto"
+    [src]="foto"
+    alt="Foto de perfil"
+    class="w-full h-full rounded-full object-cover border-2 border-gray-200"/>
+
+  <div *ngIf="!foto"
+       class="w-full h-full rounded-full bg-blue-600 flex items-center justify-center text-white text-xl font-semibold border-2 border-gray-200">
+    ?
+  </div>
+
+  <label class="absolute inset-0 rounded-full bg-black bg-opacity-40 flex items-center justify-center
+                opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 0 2-2l2-3h10l2 3a2 2 0 0 1 2 2z"/>
+      <circle cx="12" cy="13" r="4"/>
+    </svg>
+    <input type="file" accept="image/*" (change)="onFileSelected($event)" class="hidden"/>
+  </label>
+
+</div>

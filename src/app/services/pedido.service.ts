@@ -14,7 +14,7 @@ export class PedidoService {
     return this.http.post<PedidoExterno>(this.apiUrl, {
       clienteId,
       lojaId,
-      protocoloIds,
+      protocoloIds
     });
   }
 
