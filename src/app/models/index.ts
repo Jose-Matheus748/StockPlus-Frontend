@@ -109,18 +109,24 @@
     descricao?: string;
     fotoPerfil?: string;
   }
-  export interface PedidoExterno {
-    id?: number;
-    clienteId: number;
-    clienteNome?: string;
-    lojaId: number;
-    lojaNome?: string;
-    protocoloIds?: number[];
-    protocolos?: ProtocoloPedido[];
-    valorTotal?: number;
-    status?: StatusPedido;
-    dataCriacao?: string;
-  }
+
+  export interface ProtocoloPedido {
+  protocoloId: number;
+  protocoloNome: string;
+  valorTotal: number;
+}
+export interface PedidoExterno {
+  id?: number;
+  clienteId: number;
+  clienteNome?: string;
+  lojaId: number;
+  lojaNome?: string;
+  protocoloIds: number[];
+  protocolos: ProtocoloPedido[];
+  valorTotal?: number;
+  status?: StatusPedido;
+  dataCriacao?: string;
+}
   export interface CriarPedidoRequest {
     clienteId: number;
     lojaId: number;
