@@ -60,6 +60,11 @@ export class LayoutComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
+  irParaPerfil(): void {
+    this.userMenuOpen = false;
+    this.router.navigate(['/perfil/loja']);
+  }
+
   @HostListener('document:keydown.escape')
   onEscape(): void {
     this.userMenuOpen = false;

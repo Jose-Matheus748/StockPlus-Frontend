@@ -45,6 +45,18 @@
         <span *ngIf="sidebarOpen" class="text-sm font-medium">Meus Pedidos</span>
       </a>
 
+      <a
+        routerLink="/perfil/cliente"
+        routerLinkActive="bg-blue-50 text-blue-600"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+        [title]="sidebarOpen ? '' : 'Perfil'">
+        <svg class="flex-shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span *ngIf="sidebarOpen" class="text-sm font-medium">Perfil</span>
+      </a>
+
     </nav>
 
   </aside>
@@ -99,6 +111,18 @@
             <p class="text-sm font-medium text-gray-900">{{ usuario?.nome }}</p>
             <p class="text-xs text-gray-400">{{ usuario?.email }}</p>
           </div>
+
+          <button
+            (click)="irParaPerfil()"
+            class="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors rounded-lg">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Meu Perfil
+          </button>
+
+          <div class="mx-2 my-1 border-t border-gray-100"></div>
 
           <button
             (click)="handleLogout()"

@@ -43,6 +43,11 @@ export class LayoutClienteComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
+  irParaPerfil(): void {
+    this.userMenuOpen = false;
+    this.router.navigate(['/perfil/cliente']);
+  }
+
   @HostListener('document:keydown.escape')
   onEscape(): void {
     this.userMenuOpen = false;
