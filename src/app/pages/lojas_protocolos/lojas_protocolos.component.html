@@ -35,21 +35,31 @@
     <ng-container *ngIf="!isLoadingLoja && loja">
 
       <!-- HEADER DA LOJA -->
-      <div class="bg-white border border-gray-200 rounded-xl p-6 mb-8 shadow-sm">
-        <div class="flex items-start gap-4">
-          <div class="w-14 h-14 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.75"
+<div class="bg-white border border-gray-200 rounded-xl p-6 mb-8 shadow-sm">
+  <div class="flex items-start gap-4">
+        
+          <!-- FOTO OU ÍCONE PADRÃO -->
+          <div class="w-14 h-14 rounded-xl flex-shrink-0 overflow-hidden bg-blue-50 flex items-center justify-center">
+            <img
+              *ngIf="loja.fotoPerfil"
+              [src]="loja.fotoPerfil"
+              [alt]="loja.nome"
+              class="w-full h-full object-cover">
+            <svg
+              *ngIf="!loja.fotoPerfil"
+              width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.75"
               stroke-linecap="round" stroke-linejoin="round">
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
               <polyline points="9 22 9 12 15 12 15 22"/>
             </svg>
           </div>
+        
           <div class="flex-1 min-w-0">
             <h1 class="text-xl font-semibold text-gray-900">{{ loja.nome }}</h1>
             <p class="text-sm text-gray-400 mt-0.5">{{ loja.email }}</p>
             <p *ngIf="loja.descricao" class="text-sm text-gray-600 mt-2">{{ loja.descricao }}</p>
           </div>
-
+        
           <!-- BADGE QTD SELECIONADOS -->
           <div *ngIf="protocosSelecionados.length > 0"
             class="flex-shrink-0 bg-blue-600 text-white text-xs font-semibold px-3 py-1.5 rounded-full">
