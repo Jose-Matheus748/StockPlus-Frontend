@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Observable } from 'rxjs';
 import { PedidoExterno } from '../models/index';
 
 @Injectable({ providedIn: 'root' })
@@ -11,13 +10,14 @@ export class PedidoService {
 
   constructor(private http: HttpClient) {}
 
-criarPedidos(clienteId: number, lojaId: number, protocoloIds: number[]): Observable<PedidoExterno> {
-  return this.http.post<PedidoExterno>(this.apiUrl, {
-    clienteId,
-    lojaId,
-    protocoloIds
-  });
-}
+  criarPedido(clienteId: number, lojaId: number, protocoloIds: number[]): Observable<PedidoExterno> {
+    return this.http.post<PedidoExterno>(this.apiUrl, {
+      clienteId,
+      lojaId,
+      protocoloIds
+    });
+  }
+
   listarPorCliente(clienteId: number): Observable<PedidoExterno[]> {
     return this.http.get<PedidoExterno[]>(`${this.apiUrl}/cliente/${clienteId}`);
   }
